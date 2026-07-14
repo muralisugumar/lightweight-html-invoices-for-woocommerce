@@ -1,0 +1,1 @@
+(function(){'use strict';function prepareLinks(){document.querySelectorAll('a[href*="action=lhiwc_document"],a[href*="action=lhiwc_customer_document"]').forEach(function(link){link.target='_blank';link.rel='noopener';});}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',prepareLinks);}else{prepareLinks();}}());
