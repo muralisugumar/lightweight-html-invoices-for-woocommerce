@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Lightweight HTML Invoices & Packing Slips for WooCommerce
  * Description: Secure, printable HTML invoices and packing slips without server-side PDF generation.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Requires Plugins: woocommerce
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LHIWC_VERSION', '1.0.4' );
+define( 'LHIWC_VERSION', '1.0.5' );
 define( 'LHIWC_FILE', __FILE__ );
 define( 'LHIWC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'LHIWC_URL', plugin_dir_url( __FILE__ ) );

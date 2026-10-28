@@ -5,8 +5,7 @@
 	<?php $this->template( 'addresses', compact( 'order', 'document', 'type' ) ); ?>
 	<?php do_action( 'lhiwc_before_product_table', $type, $order ); $this->template( 'product-table', compact( 'order', 'document', 'type' ) ); do_action( 'lhiwc_after_product_table', $type, $order ); ?>
 	<?php $this->template( 'totals', compact( 'order', 'document', 'type' ) ); ?>
-	<?php if ( 'yes' === LHIWC_Settings::get( 'payment_method' ) && $order->get_payment_method_title() ) : ?><p><strong><?php esc_html_e( 'Payment:', 'lightweight-html-invoices-for-woocommerce' ); ?></strong> <?php echo esc_html( $order->get_payment_method_title() ); ?></p><?php endif; ?>
-	<?php if ( 'yes' === LHIWC_Settings::get( 'transaction_id' ) && $order->get_transaction_id() ) : ?><p><strong><?php esc_html_e( 'Transaction ID:', 'lightweight-html-invoices-for-woocommerce' ); ?></strong> <?php echo esc_html( $order->get_transaction_id() ); ?></p><?php endif; ?>
+	<?php if ( 'yes' === LHIWC_Settings::get( 'transaction_id' ) && $order->get_transaction_id() ) : ?><p class="lhiwc-transaction"><strong><?php esc_html_e( 'Transaction ID:', 'lightweight-html-invoices-for-woocommerce' ); ?></strong> <?php echo esc_html( $order->get_transaction_id() ); ?></p><?php endif; ?>
 	<?php $this->template( 'footer', compact( 'order', 'document', 'type' ) ); ?>
 </article>
 

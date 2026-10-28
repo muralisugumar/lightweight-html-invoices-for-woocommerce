@@ -4,7 +4,7 @@ Tags: woocommerce, invoice, packing slip, print, html
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,11 @@ Created and maintained by Murali Sugumar.
 Website: https://muralisugumar.com/
 
 == Changelog ==
+
+= 1.0.5 =
+* Added separate unit-price and quantity-aware line-total columns.
+* Removed duplicate payment-method output and the resulting blank trailing page.
+* Improved print page-break handling for invoice totals and transaction details.
 
 = 1.0.4 =
 * Added packing-slip options for customer mobile number and product weight.

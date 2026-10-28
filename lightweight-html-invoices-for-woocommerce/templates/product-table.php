@@ -1,2 +1,43 @@
-<?php defined( 'ABSPATH' ) || exit; $prices = 'invoice' === $type || 'yes' === LHIWC_Settings::get( 'packing_prices' ); $sku = 'invoice' === $type ? LHIWC_Settings::get( 'invoice_sku' ) : LHIWC_Settings::get( 'packing_sku' ); $weight = 'packing-slip' === $type && 'yes' === LHIWC_Settings::get( 'packing_weight' ); $weight_unit = get_option( 'woocommerce_weight_unit', 'kg' ); ?>
-<table class="lhiwc-items"><thead><tr><th scope="col"><?php esc_html_e( 'Product', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php if ( 'yes' === $sku ) : ?><th scope="col"><?php esc_html_e( 'SKU', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?><th scope="col" class="num"><?php esc_html_e( 'Qty', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php if ( $weight ) : ?><th scope="col" class="num"><?php esc_html_e( 'Weight', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?><?php if ( $prices ) : ?><th scope="col" class="num"><?php esc_html_e( 'Subtotal', 'lightweight-html-invoices-for-woocommerce' ); ?></th><th scope="col" class="num"><?php esc_html_e( 'Total', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?></tr></thead><tbody><?php foreach ( $order->get_items( 'line_item' ) as $item ) : $product = $item->get_product(); ?><tr><td><?php if ( 'packing-slip' === $type && 'yes' === LHIWC_Settings::get( 'packing_thumbnails' ) && $product && $product->get_image_id() ) : ?><img class="lhiwc-thumb" src="<?php echo esc_url( wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) ); ?>" alt=""><?php endif; ?><strong><?php echo esc_html( $item->get_name() ); ?></strong><?php $meta = wc_display_item_meta( $item, array( 'echo' => false, 'separator' => ', ' ) ); if ( $meta ) { echo wp_kses_post( $meta ); } ?></td><?php if ( 'yes' === $sku ) : ?><td><?php echo esc_html( $product ? $product->get_sku() : '' ); ?></td><?php endif; ?><td class="num"><?php echo esc_html( wc_format_decimal( $item->get_quantity(), wc_get_price_decimals() ) ); ?><?php $refunded = $order->get_qty_refunded_for_item( $item->get_id() ); if ( $refunded ) { echo '<small>' . esc_html( sprintf( __( ' (%s refunded)', 'lightweight-html-invoices-for-woocommerce' ), wc_format_decimal( abs( $refunded ) ) ) ) . '</small>'; } ?></td><?php if ( $weight ) : ?><td class="num"><?php echo $product && $product->has_weight() ? esc_html( wc_format_localized_decimal( (float) $product->get_weight() * (float) $item->get_quantity() ) . ' ' . $weight_unit ) : '-'; ?></td><?php endif; ?><?php if ( $prices ) : ?><td class="num"><?php echo wp_kses_post( wc_price( $item->get_subtotal() + $item->get_subtotal_tax(), array( 'currency' => $order->get_currency() ) ) ); ?></td><td class="num"><?php echo wp_kses_post( wc_price( $item->get_total() + $item->get_total_tax(), array( 'currency' => $order->get_currency() ) ) ); ?></td><?php endif; ?></tr><?php endforeach; ?></tbody></table>
+<?php
+defined( 'ABSPATH' ) || exit;
+
+$prices      = 'invoice' === $type || 'yes' === LHIWC_Settings::get( 'packing_prices' );
+$sku         = 'invoice' === $type ? LHIWC_Settings::get( 'invoice_sku' ) : LHIWC_Settings::get( 'packing_sku' );
+$weight      = 'packing-slip' === $type && 'yes' === LHIWC_Settings::get( 'packing_weight' );
+$weight_unit = get_option( 'woocommerce_weight_unit', 'kg' );
+?>
+<table class="lhiwc-items">
+	<thead><tr>
+		<th scope="col"><?php esc_html_e( 'Product', 'lightweight-html-invoices-for-woocommerce' ); ?></th>
+		<?php if ( 'yes' === $sku ) : ?><th scope="col"><?php esc_html_e( 'SKU', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?>
+		<?php if ( $prices ) : ?><th scope="col" class="num"><?php esc_html_e( 'Unit price', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?>
+		<th scope="col" class="num"><?php esc_html_e( 'Qty', 'lightweight-html-invoices-for-woocommerce' ); ?></th>
+		<?php if ( $weight ) : ?><th scope="col" class="num"><?php esc_html_e( 'Weight', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?>
+		<?php if ( $prices ) : ?><th scope="col" class="num"><?php esc_html_e( 'Line total', 'lightweight-html-invoices-for-woocommerce' ); ?></th><?php endif; ?>
+	</tr></thead>
+	<tbody>
+	<?php foreach ( $order->get_items( 'line_item' ) as $item ) : ?>
+		<?php
+		$product       = $item->get_product();
+		$quantity      = (float) $item->get_quantity();
+		$unit_subtotal = 0.0 !== $quantity ? ( (float) $item->get_subtotal() + (float) $item->get_subtotal_tax() ) / $quantity : 0;
+		$line_total    = (float) $item->get_total() + (float) $item->get_total_tax();
+		?>
+		<tr>
+			<td>
+				<?php if ( 'packing-slip' === $type && 'yes' === LHIWC_Settings::get( 'packing_thumbnails' ) && $product && $product->get_image_id() ) : ?><img class="lhiwc-thumb" src="<?php echo esc_url( wp_get_attachment_image_url( $product->get_image_id(), 'thumbnail' ) ); ?>" alt=""><?php endif; ?>
+				<strong><?php echo esc_html( $item->get_name() ); ?></strong>
+				<?php $meta = wc_display_item_meta( $item, array( 'echo' => false, 'separator' => ', ' ) ); if ( $meta ) { echo wp_kses_post( $meta ); } ?>
+			</td>
+			<?php if ( 'yes' === $sku ) : ?><td><?php echo esc_html( $product ? $product->get_sku() : '' ); ?></td><?php endif; ?>
+			<?php if ( $prices ) : ?><td class="num"><?php echo wp_kses_post( wc_price( $unit_subtotal, array( 'currency' => $order->get_currency() ) ) ); ?></td><?php endif; ?>
+			<td class="num">
+				<?php echo esc_html( wc_format_localized_decimal( $quantity ) ); ?>
+				<?php $refunded = $order->get_qty_refunded_for_item( $item->get_id() ); if ( $refunded ) { echo '<small>' . esc_html( sprintf( __( '(%s refunded)', 'lightweight-html-invoices-for-woocommerce' ), wc_format_localized_decimal( abs( $refunded ) ) ) ) . '</small>'; } ?>
+			</td>
+			<?php if ( $weight ) : ?><td class="num"><?php echo $product && $product->has_weight() ? esc_html( wc_format_localized_decimal( (float) $product->get_weight() * $quantity ) . ' ' . $weight_unit ) : '-'; ?></td><?php endif; ?>
+			<?php if ( $prices ) : ?><td class="num"><?php echo wp_kses_post( wc_price( $line_total, array( 'currency' => $order->get_currency() ) ) ); ?></td><?php endif; ?>
+		</tr>
+	<?php endforeach; ?>
+	</tbody>
+</table>

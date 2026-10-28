@@ -23,6 +23,7 @@ The result is a small plugin with fewer moving parts and no server-side PDF file
 - Optional sequential invoice numbering
 - Store logo and address from existing WordPress and WooCommerce settings
 - Product variations, SKUs, taxes, shipping, fees, discounts, and refunds
+- Clear unit price, quantity, and line total columns
 - Optional product weight and customer mobile number on packing slips
 - Theme template overrides
 - Local CSS and JavaScript only
